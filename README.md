@@ -16,6 +16,12 @@ For VSCode users, if you have installed the Chrome Debugging extension, you can 
 
 ## To generate WASM for LTCGenerator
 
+Before make, check the list:
+
+[ ] - Install emsdk. Please see below.
+[ ] - Install ninja. (Like `sudo apt install ningja`)
+[ ] - Check `CMakePresets.json`, look for `rsh` key, set its value to match your system (Linux or Windows).
+
 In order to compile C++ to WASM you must fist install Emscripten (see [Install instruction](https://emscripten.org/docs/getting_started/downloads.html)). After completing the installation and configuration of Emscripten run the following commands: 
 
 ```
