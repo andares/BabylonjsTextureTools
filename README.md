@@ -19,6 +19,7 @@ cd native/LTCGenerator
 # Now open CMakePresets.json and find the rsh configuration key. Then, update its value to "Linux" or "Windows" based on your operating system.
 cmake --preset wasm
 cmake --build --preset wasm
+cd ../..
 pnpm install
 pnpm start
 # Navigate to http://172.24.47.146:8080/ in your browser to get started.
