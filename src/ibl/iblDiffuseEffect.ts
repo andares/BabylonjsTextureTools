@@ -22,7 +22,7 @@ export class IBLDiffuseEffect {
     private readonly _engine: ThinEngine;
     private readonly _effectRenderer: EffectRenderer;
 
-    constructor(engine: ThinEngine, effectRenderer: EffectRenderer, size = 512) {
+    constructor(engine: ThinEngine, effectRenderer: EffectRenderer, size = 1024) {
         this._engine = engine;
         this._effectRenderer = effectRenderer;
 

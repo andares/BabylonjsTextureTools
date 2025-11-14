@@ -23,3 +23,5 @@ node_modules/*
 # Local dist
 dist/*
 www/scripts/*
+www/wasm
+www/wasm/*

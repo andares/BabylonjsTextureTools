@@ -3,7 +3,7 @@ import { Engine } from "@babylonjs/core/Engines/engine";
 import { EffectRenderer } from "@babylonjs/core/Materials/effectRenderer";
 import { BaseTexture } from "@babylonjs/core/Materials/Textures/baseTexture";
 import { IblCdfGenerator } from "@babylonjs/core/Rendering/iblCdfGenerator";
-import { Color4 } from "@babylonjs/core/Maths/math.color"; 
+import { Color4 } from "@babylonjs/core/Maths/math.color";
 import { BlitEffect } from "../blit/blitEffect";
 import { BlitCubeEffect } from "../blit/blitCubeEffect";
 import { BRDFEffect, BRDFMode } from "../brdf/brdfEffect";
@@ -30,7 +30,7 @@ export class TextureTools {
     private readonly _blitCubeEffect: BlitCubeEffect;
 
     private readonly _brdfEffect: BRDFEffect;
-    private readonly _iblDiffuseEffect: IBLDiffuseEffect;
+    private _iblDiffuseEffect: IBLDiffuseEffect;
     private readonly _iblSpecularEffect: IBLSpecularEffect;
     private readonly _ltcEffect: LTCEffect;
     private readonly _cdfGenerator: IblCdfGenerator;
@@ -60,7 +60,7 @@ export class TextureTools {
         this._brdfEffect.render(mode, sheen);
         this._blitEffect.blit(this._brdfEffect.rtw);
     }
-    
+
     /**
      * Saves our BRDF texture.
      */
@@ -69,7 +69,7 @@ export class TextureTools {
 
         this._blitEffect.blit(this._brdfEffect.rtw);
     }
-    
+
     public renderLTC() : Nullable<Float32Array> {
         return this._ltcEffect.render();
     }
@@ -81,7 +81,16 @@ export class TextureTools {
     /**
      * Renders our IBL Diffuse texture.
      */
-    public renderDiffuseIBL(texture: BaseTexture): void {
+    public renderDiffuseIBL(texture: BaseTexture, size?: number): void {
+        if (size) {
+            // Recreate diffuse effect with requested size
+            try {
+                this._iblDiffuseEffect.rtw.dispose();
+            } catch (e) {
+                // ignore if already disposed or not available
+            }
+            this._iblDiffuseEffect = new IBLDiffuseEffect(this.engine, this._renderer, size);
+        }
         this._cdfGenerator.onGeneratedObservable.addOnce(() => {
             this._iblDiffuseEffect.render(texture, this._cdfGenerator.getIcdfTexture());
             this._blitCubeEffect.blit(this._iblDiffuseEffect.rtw, 0);
@@ -112,7 +121,7 @@ export class TextureTools {
 
     private _createEngine(canvas: HTMLCanvasElement): ThinEngine {
         // Create our engine to hold on the canvas
-        const engine = new Engine(canvas, true, { 
+        const engine = new Engine(canvas, true, {
             preserveDrawingBuffer: true,
             premultipliedAlpha: false,
             alpha: true,

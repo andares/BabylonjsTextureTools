@@ -57,6 +57,7 @@ const iblSpecular5 = document.getElementById("iblSpecular5") as HTMLElement;
 const iblSpecular6 = document.getElementById("iblSpecular6") as HTMLElement;
 const iblSpecular64 = document.getElementById("iblSpecular64") as HTMLElement;
 const save256 = document.getElementById("save256") as HTMLElement;
+const iblSizeSelect = document.getElementById("iblSize") as HTMLSelectElement;
 
 // Texture tools current state.
 const textureCanvas = new TextureTools(mainCanvas);
@@ -67,6 +68,7 @@ let brdfMode = BRDFMode.CorrelatedGGXEnergieConservation;
 let brdfSheen = true;
 let cubeTexture: BaseTexture | undefined;
 let textureMode = TextureMode.ibl;
+let iblSize = 1024;
 
 // Switch IBL and BRDF mode
 const setMode = (mode: TextureMode): void => {
@@ -112,7 +114,7 @@ const setMode = (mode: TextureMode): void => {
 }
 
 // Specular IBL generation
-const generateSpecularIBL = function(size = 512): void {
+const generateSpecularIBL = function(size = iblSize): void {
     if (cubeTexture) {
         iblInviteText.innerText = "Processing...";
         setTimeout(() => {
@@ -137,7 +139,7 @@ const renderLTCData = function() : void {
         }
     }, 50);
 
-    
+
 }
 
 // BRDF generation
@@ -188,7 +190,7 @@ saveLTC.onclick = (): void => {
 
 iblDiffuse.onclick = (): void => {
     if (cubeTexture) {
-        textureCanvas.renderDiffuseIBL(cubeTexture);
+        textureCanvas.renderDiffuseIBL(cubeTexture, iblSize);
     }
 };
 iblSpecular0.onclick = (): void => {
@@ -218,6 +220,20 @@ iblSpecular64.onclick = (): void => {
 save256.onclick = (): void => {
     generateSpecularIBL(256);
 };
+
+// IBL size selection handling
+if (iblSizeSelect) {
+    const parsed = parseInt(iblSizeSelect.value, 10);
+    if (!isNaN(parsed)) {
+        iblSize = parsed;
+    }
+    iblSizeSelect.onchange = (): void => {
+        const v = parseInt(iblSizeSelect.value, 10);
+        if (!isNaN(v)) {
+            iblSize = v;
+        }
+    };
+}
 
 // File Drag and Drop
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -269,7 +285,7 @@ const loadFiles = function(event: any): void {
             const file = files[i];
             const name = files[i].name.toLowerCase();
             const extension = name.split('.').pop();
-    
+
             if (extension === "dds" || extension === "ktx") {
                 FilesInputStore.FilesToLoad[name] = file;
                 cubeTexture = new CubeTexture("file:" + name, textureCanvas.engine, null, false, null, () => {

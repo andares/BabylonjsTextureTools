@@ -1,37 +1,25 @@
-# Babylon.js Texture Tools
+# Babylon.js Texture Tools with Multi-Level Output
 
-[![Twitter](https://img.shields.io/twitter/follow/babylonjs.svg?style=social&label=Follow)](https://twitter.com/intent/follow?screen_name=babylonjs)
+```sh
+# Install emsdk
+sudo apt install ninja-build cmake
+git clone https://github.com/emscripten-core/emsdk.git
+cd emsdk
+./emsdk install latest
+./emsdk activate latest
+source ./emsdk_env.sh
+# To see the available versions, run ls emsdk_env.*, then run the one that matches your shell.
+cd ..
 
-**Any questions?** Here is our official [forum](https://forum.babylonjs.com/).
-
-## Running locally
-
-After cloning the repo, running locally during development is all the simplest:
-```
-npm install
-npm start
-```
-
-For VSCode users, if you have installed the Chrome Debugging extension, you can start debugging within VSCode by using the appropriate launch menu.
-
-## To generate WASM for LTCGenerator
-
-Before make, check the list:
-
-- [ ] Install emsdk. Please see below.
-- [ ] Install ninja. (Like `sudo apt install ningja`)
-- [ ] Check `CMakePresets.json`, look for `rsh` key, set its value to match your system (Linux or Windows).
-
-In order to compile C++ to WASM you must fist install Emscripten (see [Install instruction](https://emscripten.org/docs/getting_started/downloads.html)). After completing the installation and configuration of Emscripten run the following commands: 
-
-```
+# Setup Texture Tools
+git clone git@github.com:andares/BabylonjsTextureTools.git
+cd BabylonjsTextureTools
+git submodule update --init --recursive
 cd native/LTCGenerator
+# Now open CMakePresets.json and find the rsh configuration key. Then, update its value to "Linux" or "Windows" based on your operating system.
 cmake --preset wasm
 cmake --build --preset wasm
+pnpm install
+pnpm start
+# Navigate to http://172.24.47.146:8080/ in your browser to get started.
 ```
-
-The ```LTCGenerator.js``` and ```LTCGenerator.wasm``` will be copied into ```www/wasm``` folder.
-
-## Special thanks
-To Filament and its team for the code and support :-)
-
