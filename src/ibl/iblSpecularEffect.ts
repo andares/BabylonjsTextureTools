@@ -105,7 +105,7 @@ export class IBLSpecularEffect {
                 const name = texture.name.split(':').pop() || 'environment';
                 // Remove file extension.
                 const fileName = name.split('.').shift();
-                Tools.Download(blob, `${fileName}.env`);
+                Tools.Download(blob, `${fileName}-${size}.env`);
             })
             .catch((error: unknown) => {
                 console.error(error);
